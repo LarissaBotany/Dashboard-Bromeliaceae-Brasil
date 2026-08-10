@@ -1,4 +1,4 @@
-# S5_projetc_Car_sales
+# S5proj_Bromelia_distribuition
 Repositório relacionado ao projeto integrado do curso de Ciências de dados da TripleTen
 
 ## Objetivos do projeto:
@@ -7,4 +7,4 @@ O foco desse projeto é praticar tarefas comuns de engenharia de software:
 - desenvolver um aplicativo web e
 - implantá-lo em um serviço em nuvem que o torne acessível ao público.
 
-Neste projeto, será fornecido um conjunto de dados de anúncios de vendas de carros.
+Neste projeto, será fornecido um conjunto de dados de distribuição de espécies da familia Bromeliaceae
