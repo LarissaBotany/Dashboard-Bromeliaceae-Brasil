@@ -5,24 +5,22 @@ import streamlit as st
 Brom_data = pd.read_csv("ocorrencias_bromeliaceae.csv.gz")# lendo os dados
 
 hist_button = st.button('Criar histograma') # criar um botão
-        
-        if hist_button: # se o botão for clicado
+if hist_button: # se o botão for clicado
             # escrever uma mensagem
-            st.write('Criando um histograma para o conjunto de dados de Registros de espécies de Bromeliaceae')
+    st.write('Criando um histograma para o conjunto de dados de Registros de espécies de Bromeliaceae')
             
             # criar um histograma
-            fig = px.histogram(Brom_data, x="ano",
+    fig = px.histogram(Brom_data, x="ano",
                    nbins=50, 
                    title="Registros de espécies de Bromeliaceae por ano de coleta", 
                    labels={"ano": "Ano"} ) 
-            fig.update_yaxes(title_text="Nº de registros")
+    fig.update_yaxes(title_text="Nº de registros")
         
             # exibir um gráfico Plotly interativo
-            st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True)
 
 disp_button = st.button('Criar dispersão') # criar um botão
-        
-        if disp_button: # se o botão for clicado
+if disp_button: # se o botão for clicado
             # escrever uma mensagem
             st.write('Criando um gráfico de dispersão para o conjunto de dados de Registros de espécies de Bromeliaceae')
             
