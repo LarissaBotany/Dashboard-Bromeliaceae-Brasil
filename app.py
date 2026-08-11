@@ -1,11 +1,21 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-
+st.header('Registros de Bromeliaceae no Brasil')
+st.write('Dados de ocorrência do GBIF para a família Bromeliaceae, '
+         'com nomes taxonômicos resolvidos pela Flora e Funga do Brasil.')
 Brom_data = pd.read_csv("ocorrencias_bromeliaceae.csv.gz")# lendo os dados
+
+mostrar_dados = st.checkbox('Mostrar tabela de dados')
+
+if mostrar_dados:
+    st.write('Amostra dos registros usados nos gráficos:')
+    st.dataframe(Brom_data)
+
 
 hist_button = st.button('Criar histograma') # criar um botão
 if hist_button: # se o botão for clicado
+    st.subheader('Esforço de coleta ao longo do tempo')
             # escrever uma mensagem
     st.write('Criando um histograma para o conjunto de dados de Registros de espécies de Bromeliaceae')
             
