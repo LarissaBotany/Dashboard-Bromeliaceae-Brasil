@@ -37,4 +37,4 @@ if disp_button: # se o botão for clicado
                                      )
         
             # exibir um gráfico Plotly interativo
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig_disp, use_container_width=True)
