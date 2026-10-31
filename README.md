@@ -6,7 +6,7 @@ Aplicativo web interativo para explorar os registros de coleta da família
 a distribuição por bioma da Flora e Funga do Brasil.
 
 **Aplicativo online:** https://s5proj-bromelia-distribuition.onrender.com
-**github**https://github.com/LarissaBotany/S5proj_Bromelia_distribuition
+**GitHub** https://github.com/LarissaBotany/Dashboard-Bromeliaceae-Brasil
 
 ## Para que serve
 
@@ -101,7 +101,7 @@ Requer Python 3.10 ou superior.
 
 ```bash
 # 1. Clonar o repositório
-git clone https://github.com/SEU-USUARIO/S5proj_Bromelia_distribuition.git
+git clone https://github.com/LarissaBotany/Dashboard-Bromeliaceae-Brasil.git
 cd S5proj_Bromelia_distribuition
 
 # 2. Criar e ativar o ambiente virtual
