@@ -1,4 +1,3 @@
-# S5proj_Bromelia_distribuition
 # Dashboard Bromeliaceae do Brasil
 
 Aplicativo web interativo para explorar os registros de coleta da família
@@ -20,6 +19,19 @@ Este dashboard permite responder, de forma visual, perguntas como:
   número de espécies distintas coletadas, ou apenas à repetição das mesmas
   espécies?
 
+## Escala dos dados
+ 
+| Indicador | Valor |
+|---|---|
+| Registros de coleta | **66.722** |
+| Espécies aceitas distintas | **1.268** |
+| Gêneros | **60** |
+| Estados (UF) com registros | **27** (todas as UFs) |
+| Período coberto | **1768 a 2026** |
+ 
+- **Concentração recente:** cerca de **80%** dos registros são de 2000 em diante. A década de 2010 tem 17.940 registros e 2020–2026 já soma 22.132.
+- **Registros históricos:** 276 registros são anteriores a 1900 (o mais antigo é de 1768).
+- **Registros sem UF:** 2.514 registros (3,8%) não têm estado informado, mas mantêm coordenadas e ano.
 
 ## Funcionalidades
 
@@ -30,10 +42,15 @@ Este dashboard permite responder, de forma visual, perguntas como:
   número de espécies distintas coletadas.
 - **Botões** que geram cada gráfico sob demanda.
 
+## O que o aplicativo permite interpretar
+ 
+- **Histograma do ano de coleta:** mostra a evolução do esforço de coleta e permite identificar décadas de maior intensidade, além de picos que podem refletir a digitalização de acervos de herbário e não só coletas novas.
+- **Dispersão registros × espécies por ano:** permite distinguir dois cenários. Se os pontos sobem juntos, mais coletas trouxeram mais espécies. Se os registros crescem e as espécies se estabilizam, o esforço extra está repetindo espécies já conhecidas, o que sugere saturação da amostragem ou concentração em locais já visitados. Nos dados, isso aparece com clareza: em 2025 há 4.875 registros para 416 espécies, enquanto em 2010 eram 3.469 registros para 333 espécies, ou seja, os registros crescem cerca de 40% e as espécies cerca de 25%.
+- **Tabela de registros:** dá acesso direto aos dados que alimentam os gráficos, para conferir qualquer ponto observado.
 
 ## Fontes de dados
 
-| Fonte | O que fornece | Referencia |
+| Fonte | O que fornece | Referência |
 |---|---|---|
 | GBIF | Ocorrências: nome aceito, ano de coleta, coordenadas, estado | GBIF.org (10 August 2026) GBIF Occurrence Download https://doi.org/10.15468/dl.qvrga3|
 | Flora e Funga do Brasil (JBRJ) | Distribuição por bioma e por estado das espécies aceitas |Flora e Funga do Brasil (Constantly updated): Flora e Funga do Brasil project - Projeto Flora e Funga do Brasil. Instituto de Pesquisas Jardim Botânico do Rio de Janeiro. Dataset/Checklist. doi:10.15468/1mtkaw|
@@ -56,31 +73,29 @@ O aplicativo consome um único arquivo já tratado,
 
 O arquivo é comprimido (`.gz`) para caber com folga no repositório e ser lido rapidamente no plano gratuito do Render. O `pandas` abre esse formato diretamente, sem necessidade de descompactar.
 
-## Preparo dos dados
-
-Os arquivos brutos do GBIF e da Flora e Funga do Brasil foram baixados e processados separadamente, em scripts de preparação responsáveis pela extração, limpeza e agregação. Este repositório contém apenas a saída já tratada, de modo que o aplicativo não precisa baixar nem processar dados brutos ao ser executado.Parte dos scripts de preparação e limpeza de dados foi desenvolvida com apoio de um assistente de IA (Claude, Anthropic), sob minha supervisão e revisão. Isso incluiu: estruturação inicial dos scripts de coleta/limpeza, sugestões de tratamento de erros e correção de problemas de tipagem identificados pelo linter (Pylance).
-
-Etapas aplicadas antes da visualização:
-
-- Filtragem para a família Bromeliaceae, considerando apenas nomes aceitos.
-- Extração do bioma a partir do campo `occurrenceRemarks` da Flora, que traz a informação em formato JSON dentro de uma única coluna.
-- Remoção de registros sem ano de coleta ou sem coordenadas válidas, incluindo   coordenadas em (0, 0) e pontos fora dos limites aproximados do Brasil.
-- Descarte de registros que não representam coleta em campo (espécimes fósseis e  material vivo cultivado).
-- Padronização dos nomes de estado para siglas de UF.
-- Cruzamento entre as espécies do GBIF e a tabela de biomas da Flora.
+## Validação taxonômica e preparo dos dados
+ 
+A qualidade taxonômica foi tratada como etapa central do projeto, e não só como limpeza:
+ 
+- **Nomes aceitos e sinônimos:** uso apenas de nomes aceitos, para que a mesma espécie não seja contada mais de uma vez sob nomes diferentes. Isso afeta diretamente a contagem de espécies distintas por ano, que é a base do gráfico de dispersão.
+- **Cruzamento GBIF × Flora e Funga do Brasil:** as espécies do GBIF foram conferidas contra a lista oficial brasileira, que traz a distribuição por bioma. Espécies sem correspondência são sinal de sinonímia mal resolvida e foram tratadas como tal.
+- **Extração do bioma** do campo `occurrenceRemarks` da Flora, que traz a informação em JSON dentro de uma única coluna.
+- **Filtros de qualidade geográfica:** remoção de registros sem ano ou sem coordenadas válidas, incluindo coordenadas em (0, 0) e pontos fora dos limites aproximados do Brasil.
+- **Filtro por tipo de registro:** descarte de espécimes fósseis e material vivo cultivado, que não representam coleta em campo.
+- **Padronização** dos nomes de estado para siglas de UF.
+Os arquivos brutos foram processados em scripts de preparação separados (extração, limpeza e agregação). Este repositório contém apenas a saída tratada, então o aplicativo não precisa baixar nem processar dados brutos ao ser executado.
+ 
+Parte dos scripts de coleta e limpeza foi desenvolvida com apoio de um assistente de IA (Claude, Anthropic), sob minha supervisão e revisão. Isso incluiu a estruturação inicial dos scripts, sugestões de tratamento de erros e correção de problemas de tipagem apontados pelo linter (Pylance).
 
 ## Limitações dos dados
-
-Dados de biodiversidade como os do GBIF **não são um censo**: refletem esforço de coleta, não necessariamente a distribuição real das espécies. Isso implica limitações importantes para a interpretação dos resultados:
-
-- **Viés de amostragem geográfico**: áreas de mais fácil acesso (perto de cidades, universidades e estradas) tendem a ter mais registros, o que pode inflar artificialmente a amplitude de distribuição de espécies nessas regiões.
-- **Viés temporal**: o número de registros por ano reflete tanto mudanças reais  quanto o aumento do esforço de digitalização de acervos ao longo do tempo, especialmente a digitalização de herbários nas últimas décadas.
-- **Qualidade variável dos registros**: nem todos os registros do GBIF são verificados por especialista; incluem observações de ciência cidadã junto com   material de herbário tradicional. O campo `basisOfRecord` foi usado para  excluir alguns tipos não representativos de coleta em campo, mas isso não  elimina todo o ruído.
-- **Reconciliação taxonômica imperfeita**: o cruzamento entre nomes do GBIF e da Flora e Funga do Brasil depende de correspondência de nome científico; sinônimos não completamente normalizados podem gerar espécies sem bioma  correspondente.
-
-Esses dados são adequados para uma análise **exploratória e descritiva**, não para inferências causais sobre distribuição real de espécies sem validação adicional.
-
-
+Dados de biodiversidade como os do GBIF **não são um censo**: refletem esforço de coleta, não necessariamente a distribuição real das espécies.
+ 
+- **Viés de amostragem geográfico:** áreas de fácil acesso (perto de cidades, universidades e estradas) tendem a ter mais registros, o que pode inflar a amplitude de distribuição das espécies nessas regiões.
+- **Viés temporal:** o número de registros por ano reflete mudanças reais e também o aumento da digitalização de acervos, especialmente de herbários nas últimas décadas.
+- **Qualidade variável dos registros:** nem todos os registros do GBIF são verificados por especialista, e há observações de ciência cidadã junto com material de herbário. O campo `basisOfRecord` foi usado para excluir alguns tipos não representativos, mas isso não elimina todo o ruído.
+- **Reconciliação taxonômica imperfeita:** o cruzamento depende da correspondência de nomes científicos; sinônimos não totalmente normalizados podem gerar espécies sem bioma correspondente.
+Esses dados servem a uma análise **exploratória e descritiva**, não a inferências causais sobre a distribuição real das espécies sem validação adicional.
+ 
 ## Estrutura do projeto
 
 ```
@@ -98,29 +113,31 @@ Esses dados são adequados para uma análise **exploratória e descritiva**, nã
 ## Como executar localmente
 
 Requer Python 3.10 ou superior.
-
+ 
 ```bash
 # 1. Clonar o repositório
 git clone https://github.com/LarissaBotany/Dashboard-Bromeliaceae-Brasil.git
-cd S5proj_Bromelia_distribuition
-
+cd Dashboard-Bromeliaceae-Brasil
+ 
 # 2. Criar e ativar o ambiente virtual
 python -m venv bromelia_env
 source bromelia_env/bin/activate    # no Windows: bromelia_env\Scripts\activate
-
+ 
 # 3. Instalar as dependências
 pip install -r requirements.txt
-
+ 
 # 4. Rodar o aplicativo
 streamlit run app.py
 ```
-
+ 
 O aplicativo abre no navegador em `http://localhost:8501`.
-
 ## Tecnologias
 
 `pandas` · `plotly-express` · `streamlit` · hospedagem no Render
 
----
 
-Projeto desenvolvido para a Sprint 5 do curso de Ciência de Dados da TripleTen.
+## Autora
+ 
+Larissa Areal de Carvalho Muller
+ 
+Projeto desenvolvido durante o bootcamp de Ciência de Dados.
